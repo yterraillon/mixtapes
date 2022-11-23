@@ -19,9 +19,9 @@ public class PushoverApi : INotificationService
 
         var nvc = new List<KeyValuePair<string, string>>
         {
-            new KeyValuePair<string, string>("token", "a5x9bbigzbe3vsrzucbcv5z6yk91yz"),
-            new KeyValuePair<string, string>("user", "c7RBFdS5WcEA5MAhddldUQTWNzi4Fw"),
-            new KeyValuePair<string, string>("message", message)
+            new ("token", "a5x9bbigzbe3vsrzucbcv5z6yk91yz"),
+            new ("user", "c7RBFdS5WcEA5MAhddldUQTWNzi4Fw"),
+            new ("message", message)
         };
 
         var req = new HttpRequestMessage(HttpMethod.Post, _httpClient.BaseAddress) { 
