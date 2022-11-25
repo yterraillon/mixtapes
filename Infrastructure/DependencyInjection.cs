@@ -1,6 +1,9 @@
-﻿using Application.Sync.Commands.SyncPlaylists;
+﻿using Application.ConnectService.Commands.GetSpotifyAuthorizeUrl;
+using Application.Sync.Commands.SyncPlaylists;
 using Infrastructure.Jobs;
 using Infrastructure.Pushover;
+using Infrastructure.Spotify.Authentication;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Quartz;
 
@@ -8,8 +11,13 @@ namespace Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services)
+    public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        services.Configure<Settings>(configuration.GetSection("Spotify:Authentication"));
+        services.AddTransient<ISpotifyAuthorizeUrlBuilder, SpotifyAuthorizeUrlBuilder>();
+        services.AddSingleton<CodeProvider>();
+        services.AddSingleton<IStateProvider, StateProvider>();
+        
         services.AddHttpClient<INotificationService, PushoverApi>(client =>
         {
             client.BaseAddress = new Uri("https://api.pushover.net/1/messages.json");
@@ -40,7 +48,5 @@ public static class DependencyInjection
         {
             options.WaitForJobsToComplete = true;
         });
-
-        return services;
     }
 }

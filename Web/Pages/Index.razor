@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using MediatR
 @using Application.Sync.Commands.SyncPlaylists;
+@using Application.ConnectService.Commands.GetSpotifyAuthorizeUrl
 
 @inject IMediator Mediator
 
@@ -14,8 +15,20 @@ Welcome to your new app.
 
 <button class="btn btn-primary" @onclick="SendNotification">Send Notification</button>
 
-@code {
 
+<h2> Spotify auth url</h2>
+<div>@_authUrl</div>
+<button class="btn btn-primary" @onclick="GetUrl">GetUrl</button>
+
+@code {
+    private string _authUrl = string.Empty;
+    
+    private async Task GetUrl()
+    {
+        var response = await Mediator.Send(new GetSpotifyAuthorizeUrl.Request());
+        _authUrl = response.Uri;
+    }
+    
     private async Task SendNotification()
     {
         await Mediator.Send(new SyncPlaylists.Command());
