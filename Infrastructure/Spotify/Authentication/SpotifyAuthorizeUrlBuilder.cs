@@ -25,7 +25,7 @@ public class SpotifyAuthorizeUrlBuilder : ISpotifyAuthorizeUrlBuilder
         {
             { "client_id", _settings.ClientId },
             { "response_type", ResponseType },
-            { "redirect_uri", BuildRedirectUrl() },
+            { "redirect_uri", _settings.AuthorizeCallbackUrl },
             { "code_challenge_method", CodeChallengeMethod },
             { "code_challenge", _codeProvider.Challenge },
             { "scope", FormatScopes(scopes) },
@@ -33,8 +33,7 @@ public class SpotifyAuthorizeUrlBuilder : ISpotifyAuthorizeUrlBuilder
         };
 
         return QueryHelpers.AddQueryString(_settings.AuthorizeUrl, parameters);
-
-        string BuildRedirectUrl() => _settings.AccountsServiceUrl + "/authorize";
+        
         static string FormatScopes(IEnumerable<string> scopes) => string.Join(" ", scopes);
     }
 }

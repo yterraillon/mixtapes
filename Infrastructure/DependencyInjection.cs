@@ -1,4 +1,5 @@
 ﻿using Application.ConnectService.Commands.GetSpotifyAuthorizeUrl;
+using Application.ConnectService.Commands.VerifySpotifyAuthentication;
 using Application.Sync.Commands.SyncPlaylists;
 using Infrastructure.Jobs;
 using Infrastructure.Pushover;
@@ -17,6 +18,7 @@ public static class DependencyInjection
         services.AddTransient<ISpotifyAuthorizeUrlBuilder, SpotifyAuthorizeUrlBuilder>();
         services.AddSingleton<CodeProvider>();
         services.AddSingleton<IStateProvider, StateProvider>();
+        services.AddHttpClient<ISpotifyAccountsService, SpotifyAccountsService>();
         
         services.AddHttpClient<INotificationService, PushoverApi>(client =>
         {
@@ -39,9 +41,8 @@ public static class DependencyInjection
 
             SimpleScheduleBuilder SetUpDailySchedule() => 
                 SimpleScheduleBuilder.Create()
-                    .WithIntervalInSeconds(10)
-                    //.WithIntervalInHours(24)
-                .RepeatForever();
+                    .WithIntervalInHours(24)
+                    .RepeatForever();
         });
         
         services.AddQuartzServer(options =>
